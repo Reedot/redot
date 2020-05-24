@@ -1,8 +1,28 @@
+import { hydrate } from 'react-dom'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
+import { loadableReady } from '@loadable/component'
+import { Provider } from 'react-redux'
 
+import configureStore from './store'
 import App from './App'
 
-const rootElement = document.getElementById('root')
+const store = configureStore()
 
-ReactDOM.render(<App />, rootElement)
+loadableReady(() => {
+  const rootElement = document.getElementById('root')
+  hydrate(
+    <Provider store={store}>
+      <BrowserRouter>
+        <>
+          <App />
+        </>
+      </BrowserRouter>
+    </Provider>,
+    rootElement
+  )
+})
+
+if (module.hot) {
+  module.hot.accept()
+}
